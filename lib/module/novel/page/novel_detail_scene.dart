@@ -1,0 +1,368 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:tianyue/common/dao/novel_dao.dart';
+import 'package:tianyue/module/novel/bean/novel_book.dart';
+import 'package:tianyue/module/novel/bean/novel_comment_list_entity.dart';
+import 'package:tianyue/module/novel/bean/novel_detail_entity.dart';
+import 'package:tianyue/module/novel/bean/novel_post.dart';
+import 'package:tianyue/module/novel/bean/novel_post_list_entity.dart';
+import 'package:tianyue/module/novel/model/novel_model.dart';
+import 'package:tianyue/module/novel/widget/novel_comment_cell.dart';
+import 'package:tianyue/module/novel/widget/novel_detail_cell.dart';
+import 'package:tianyue/module/novel/widget/novel_detail_header.dart';
+import 'package:tianyue/module/novel/widget/novel_detail_recommend_view.dart';
+import 'package:tianyue/module/novel/widget/novel_detail_toolbar.dart';
+import 'package:tianyue/module/novel/widget/novel_post_cell.dart';
+import 'package:tianyue/module/novel/widget/novel_summary_view.dart';
+import 'dart:async';
+
+import 'package:tianyue/public.dart';
+import 'package:tianyue/utility/app_utils.dart';
+import 'package:tianyue/widget/loading_indicator.dart';
+
+/**
+ * 小说详情页
+ */
+class NovelDetailScene extends StatefulWidget {
+  final String novelId;
+
+  NovelDetailScene(this.novelId);
+
+  @override
+  NovelDetailSceneState createState() => NovelDetailSceneState();
+}
+
+class NovelDetailSceneState extends State<NovelDetailScene> {
+  List<NovelBook> recommendNovels = [];
+  NovelPostListEntity novelPost;
+  NovelCommentListEntity novelComments;
+  ScrollController scrollController = ScrollController();
+  double navAlpha = 0;
+  bool isSummaryUnfold = false;
+  int commentCount = 0;
+  int commentMemberCount = 0;
+  NovelDetailEntity novelDetail;
+  bool isVisible = true;
+  PageState pageState = PageState.Loading;
+  bool _hasCollected = false;
+  var _collectionIcons;
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(milliseconds: 500), () {
+      Screen.updateStatusBarStyle(SystemUiOverlayStyle.dark);
+    });
+    fetchData();
+
+    scrollController.addListener(() {
+      var offset = scrollController.offset;
+      if (offset < 0) {
+        if (navAlpha != 0) {
+          setState(() {
+            navAlpha = 0;
+          });
+        }
+      } else if (offset < 50) {
+        setState(() {
+          navAlpha = 1 - (50 - offset) / 50;
+        });
+      } else if (navAlpha != 1) {
+        setState(() {
+          navAlpha = 1;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  changeSummaryMaxLines() {
+    setState(() {
+      isSummaryUnfold = !isSummaryUnfold;
+    });
+  }
+
+  back() {
+    Navigator.pop(context);
+  }
+
+  fetchData() async {
+    try {
+      novelDetail = await NovelModel.getNovelDetail(widget.novelId);
+      novelPost = await NovelModel.getNovelpost(widget.novelId, 0, 5);
+      novelComments = await NovelModel.getNovelComment(widget.novelId, 0, 5);
+      recommendNovels = await NovelModel.getBookRecommend(widget.novelId);
+      _hasCollected = await NovelDao.isCollected(widget.novelId);
+      setState(() {});
+    } catch (e) {}
+  }
+
+  /// 失败重试
+  _retry() {
+    pageState = PageState.Loading;
+    setState(() {});
+    fetchData();
+  }
+  _collectComic() async {
+    if (novelDetail == null) {
+      return;
+    }
+    if (_hasCollected) {
+      NovelDao.cancelCollecte(widget.novelId).then((result) {
+        setState(() {
+          _hasCollected = false;
+        });
+      });
+    } else {
+      NovelDao.addCollecte(novelDetail.title, widget.novelId,
+          novelDetail.cover)
+          .then((result) {
+        setState(() {
+          _hasCollected = true;
+        });
+      });
+      ;
+    }
+  }
+  Widget buildNavigationBar() {
+    if (_hasCollected == true) {
+      _collectionIcons = Icons.favorite;
+    } else {
+      _collectionIcons = Icons.favorite_border;
+    }
+
+    return Stack(
+      children: <Widget>[
+        Opacity(
+          opacity: navAlpha,
+          child: Container(
+            decoration: BoxDecoration(
+                color: TYColor.white, boxShadow: Styles.borderShadow),
+            padding: EdgeInsets.fromLTRB(5, Screen.topSafeHeight, 0, 0),
+            height: Screen.navigationBarHeight,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 44,
+                  child: GestureDetector(
+                      onTap: back, child: Image.asset('img/pub_back_gray.png')),
+                ),
+                Expanded(
+                  child: Text(
+                    novelDetail.title,
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                new IconButton(
+                  tooltip: 'collection',
+                  onPressed: _collectComic,
+                  icon: Icon(_collectionIcons),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildComment() {
+    if (novelComments == null ||
+        novelComments.reviews == null ||
+        novelComments.reviews.length == 0) {
+      return Container();
+    }
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Row(
+              children: <Widget>[
+                Image.asset('img/home_tip.png'),
+                SizedBox(width: 13),
+                Text('书友评价', style: TextStyle(fontSize: 16)),
+                Expanded(child: Container()),
+                Image.asset('img/detail_write_comment.png'),
+                Text('  写书评',
+                    style: TextStyle(fontSize: 14, color: TYColor.primary)),
+                SizedBox(width: 15),
+              ],
+            ),
+          ),
+          Divider(height: 1),
+          Column(
+            children: novelComments.reviews
+                .map((comment) => NovelCommentCell(comment))
+                .toList(),
+          ),
+          Divider(height: 1),
+          GestureDetector(
+            onTap: () {
+              AppNavigator.pushNovelPost(context, novelDetail);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              child: Center(
+                child: Text(
+                  '查看全部评论（${novelComments.total}条）',
+                  style: TextStyle(fontSize: 14, color: TYColor.gray),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildPosts() {
+    if (novelPost == null ||
+        novelPost.posts == null ||
+        novelPost.posts.length == 0) {
+      return Container();
+    }
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Row(
+              children: <Widget>[
+                Image.asset('img/home_tip.png'),
+                SizedBox(width: 13),
+                Text('书友讨论', style: TextStyle(fontSize: 16)),
+                Expanded(child: Container()),
+                Image.asset('img/detail_write_comment.png'),
+                Text('  写书评',
+                    style: TextStyle(fontSize: 14, color: TYColor.primary)),
+                SizedBox(width: 15),
+              ],
+            ),
+          ),
+          Divider(height: 1),
+          Column(
+            children: novelPost.posts
+                .map((comment) => NovelPostCell(comment))
+                .toList(),
+          ),
+          Divider(height: 1),
+          GestureDetector(
+            onTap: () {
+              AppNavigator.pushNovelPost(context, novelDetail);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              child: Center(
+                child: Text(
+                  '查看全部评论（${novelPost.total}条）',
+                  style: TextStyle(fontSize: 14, color: TYColor.gray),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTags() {
+    var colors = [Color(0xFFF9A19F), Color(0xFF59DDB9), Color(0xFF7EB3E7)];
+    var i = 0;
+    var tagWidgets = novelDetail.tags.map((tag) {
+      var color = colors[i % 3];
+      var tagWidget = Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: Color.fromARGB(99, color.red, color.green, color.blue),
+              width: 0.5),
+          borderRadius: BorderRadius.circular(3),
+        ),
+        padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+        child: Text(tag, style: TextStyle(fontSize: 14, color: colors[i % 3])),
+      );
+      i++;
+      return tagWidget;
+    }).toList();
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+      color: TYColor.white,
+      child: Wrap(runSpacing: 10, spacing: 10, children: tagWidgets),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (this.novelDetail == null) {
+      return LoadingIndicator(
+        pageState,
+        retry: _retry,
+      );
+    }
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Container(
+            color: TYColor.white,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    controller: scrollController,
+                    padding: EdgeInsets.only(top: 0),
+                    physics: BouncingScrollPhysics(),
+                    children: <Widget>[
+                      NovelDetailHeader(novelDetail),
+                      SizedBox(height: 10),
+                      NovelSummaryView(novelDetail.longIntro, isSummaryUnfold,
+                          changeSummaryMaxLines),
+                      NovelDetailCell(
+                        iconName: 'img/detail_latest.png',
+                        title: '最新',
+                        subtitle: novelDetail.lastChapter,
+                        updateTime:
+                            AppUtils.showNovelTime(novelDetail.updated),
+                        attachedWidget: Text(novelDetail.isSerial ? "连载" : "完结",
+                            style: TextStyle(fontSize: 14, color: Colors.blue)),
+                        onTap: () {
+                          AppNavigator.pushNovelMenu(context, novelDetail.sId);
+                        },
+                      ),
+                      NovelDetailCell(
+                        iconName: 'img/detail_chapter.png',
+                        title: '目录',
+                        updateTime: "",
+                        subtitle: '共${novelDetail.chaptersCount}章',
+                        onTap: () {
+                          AppNavigator.pushNovelMenu(context, novelDetail.sId);
+                        },
+                      ),
+                      buildTags(),
+                      SizedBox(height: 10),
+                      buildPosts(),
+                      buildComment(),
+                      SizedBox(height: 10),
+                       NovelDetailRecommendView(recommendNovels),
+                    ],
+                  ),
+                ),
+                NovelDetailToolbar(novelDetail)
+              ],
+            ),
+          ),
+          buildNavigationBar(),
+        ],
+      ),
+    );
+  }
+}
