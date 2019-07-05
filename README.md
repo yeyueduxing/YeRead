@@ -4,89 +4,89 @@
 ## 主要实现的功能有：
 * 应用的侧滑功能
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-51-30.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-51-30.png" width="230" hspace="20">
 
 * 漫画的首页推荐
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-02.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-11.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-02.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-11.png" width="230" hspace="20">
 
 * 漫画排行
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-17.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-22.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-17.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-22.png" width="230" hspace="20">
 
 * 收藏书架
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-27.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-27.png" width="230" hspace="20">
 
 * 漫画详情页
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-34.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-39.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-34.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-39.png" width="230" hspace="20">
 
 * 漫画阅读页
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-52-46.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-52-46.png" width="230" hspace="20">
 
 * 小说的书单页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-53-27.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-53-34.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-53-47.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-53-27.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-53-34.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-53-47.png" width="230" hspace="20">
 
 * 排行页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-53-54.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-53-58.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-05.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-53-54.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-53-58.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-05.png" width="230" hspace="20">
 
 * 分类页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-09.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-14.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-09.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-14.png" width="230" hspace="20">
 
 * 收藏书架
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-55-32.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-55-32.png" width="230" hspace="20">
 
 * 小说的搜索页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-56-46.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-56-51.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-56-46.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-56-51.png" width="230" hspace="20">
 
 * 小说的详情页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-19.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-27.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-19.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-27.png" width="230" hspace="20">
 
 * 小说的目录阅读页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-47.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-55.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-47.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-55.png" width="230" hspace="20">
 
 * 小说的评论页面
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-33.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-54-37.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-33.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-54-37.png" width="230" hspace="20">
 
 * 动画的首页
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-56-01.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-56-07.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-56-01.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-56-07.png" width="230" hspace="20">
 
 * 动画的排行
 
-<img src="/Screenshots/Screenshot_2019-07-04-23-10-39.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-23-10-39.png" width="230" hspace="20">
 
 * 动画的每日精选，推荐
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-56-07.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-56-07.png" width="230" hspace="20">
 
 * 动画的详情页
 
-<img src="/Screenshots/Screenshot_2019-07-04-22-57-13.png" width="330" hspace="20">
-<img src="/Screenshots/Screenshot_2019-07-04-22-57-40.png" width="330" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-57-13.png" width="230" hspace="20">
+<img src="/Screenshots/Screenshot_2019-07-04-22-57-40.png" width="230" hspace="20">
 
 
 
@@ -107,7 +107,7 @@
 
 该应用是仿照[FlutterTianYue](https://github.com/ZDfordream/FlutterTianYue) 项目上更改的，一开始完全不会Flutter，看了Flutter-go也只是看懂了一些组件，然后参照这个项目慢慢的学习，学习网络请求，学习页面跳转等等，在这要非常感谢该项目的作者。
 
-# **如果您觉得还可以的话，给个Star白~**
+# **如果您觉得还可以的话，给个Star~**
 
 # 默认条约
 
