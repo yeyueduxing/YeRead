@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:tianyue/common/cache/custom_cache_manager.dart';
 
 /**
  *
@@ -8,23 +10,23 @@ import 'package:dio/dio.dart';
 class CacheInterceptor extends InterceptorsWrapper {
   CacheInterceptor();
 
-  var _cache = new Map<Uri, Response>();
 
   @override
-  onRequest(RequestOptions options) {
-    Response response = _cache[options.uri];
-    if (options.extra["refresh"] == true) {
-      print("${options.uri}: force refresh, ignore cache! \n");
-      return options;
-    } else if (response != null) {
-      print("cache hit: ${options.uri} \n");
+  onRequest(RequestOptions options) async{
+    FileInfo info = await CustomCacheManager().getFileFromCache(options.uri.toString());
+    if(info!=null){
+      print("使用缓存"+options.uri.toString());
+      String data = await info.file.readAsString();
+      Response response = new Response(data:data);
       return response;
     }
+    return options;
   }
 
   @override
-  onResponse(Response response) {
-    _cache[response.request.uri] = response;
+  onResponse(Response response) async{
+    String body = response.data;
+    await CustomCacheManager().putStringFile(response.request.uri.toString(), body);
   }
 
   @override

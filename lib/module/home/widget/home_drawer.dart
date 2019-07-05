@@ -32,7 +32,6 @@ class HomeDrawer extends StatelessWidget {
                         new UserAccountsDrawerHeader(
                           //Material内置控件
                           accountName: new Text("夜月"),
-                          accountEmail: new Text("emali"),
                           //用户名
                           //用户邮箱
                           currentAccountPicture: new GestureDetector(
@@ -63,18 +62,6 @@ class HomeDrawer extends StatelessWidget {
                             ),
                             onTap: () {
                               claaback(2);
-                            }),
-                        new ListTile(
-                            title: new Text("阅读历史"
-                            ),
-                            onTap: () {
-                              claaback(1);
-                            }),
-                        new ListTile(
-                            title: new Text("阅读历史"
-                            ),
-                            onTap: () {
-                              claaback(1);
                             }),
                       ],
                     ),

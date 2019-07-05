@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:tianyue/common/cache/custom_cache_manager.dart';
 import 'dart:convert';
 
 import 'package:tianyue/common/net/custom_cache_interceptor.dart';
@@ -21,36 +23,15 @@ class Request {
     Response<String> response = await dio.get(url);
     String responseBody = response.data;
     return json.decode(responseBody);
-//
-//    // 实例化
-//    HttpClient httpClient = new HttpClient();
-//    // 打开Http连接
-//    HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
-//    // 请求头
-//    // 等待连接服务器
-//    var response = await request.close();
-//    // 获取响应内容
-//    String responseBody = await response.transform(utf8.decoder).join();
-//    //关闭httpClient
-//    httpClient.close();
-//    return json.decode(responseBody);
-
-
   }
 
 
   static Future<dynamic> getByHttpHtml(String url) async {
-    // 实例化
-    HttpClient httpClient = new HttpClient();
-    // 打开Http连接
-    HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
-    // 请求头
-    // 等待连接服务器
-    var response = await request.close();
-    // 获取响应内容
-    String responseBody = await response.transform(utf8.decoder).join();
-    //关闭httpClient
-    httpClient.close();
+    var dio = new Dio();
+    dio.options.baseUrl = "https://baidu.com";
+    dio.interceptors.add(CacheInterceptor());
+    Response<String> response = await dio.get(url);
+    String responseBody = response.data;
     return responseBody;
   }
 

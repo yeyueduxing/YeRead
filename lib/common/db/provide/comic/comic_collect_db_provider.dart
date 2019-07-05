@@ -114,7 +114,7 @@ class ComicCollectDbProvider extends BaseDbProvider {
       });
       return list;
     }
-    return null;
+    return list;
   }
 
 }

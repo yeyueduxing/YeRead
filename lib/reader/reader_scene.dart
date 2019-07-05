@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tianyue/module/novel/bean/novel_chapter_detail_entity.dart';
+import 'package:tianyue/module/novel/bean/novel_menu.dart';
+import 'package:tianyue/module/novel/bean/novel_menu_list_entity.dart';
+import 'package:tianyue/module/novel/model/novel_model.dart';
 import 'dart:async';
 
 import 'package:tianyue/public.dart';
@@ -16,9 +20,9 @@ import 'reader_view.dart';
 enum PageJumpType { stay, firstPage, lastPage }
 
 class ReaderScene extends StatefulWidget {
-  final int articleId;
+  final NovelMenuListEntity menuList;
 
-  ReaderScene({this.articleId});
+  ReaderScene({this.menuList});
 
   @override
   ReaderSceneState createState() => ReaderSceneState();
@@ -26,17 +30,18 @@ class ReaderScene extends StatefulWidget {
 
 class ReaderSceneState extends State<ReaderScene>{
   int pageIndex = 0;
+  int selectChapter = 0;
   bool isMenuVisiable = false;
   PageController pageController = PageController(keepPage: false);
   bool isLoading = false;
 
   double topSafeHeight = 0;
 
-  Article preArticle;
-  Article currentArticle;
-  Article nextArticle;
+  NovelChapterInfo preArticle;
+  NovelChapterInfo currentArticle;
+  NovelChapterInfo nextArticle;
 
-  List<Chapter> chapters = [];
+  List<Novelmenu> chapters = [];
 
   PageState pageState = PageState.Loading;
 
@@ -62,34 +67,29 @@ class ReaderSceneState extends State<ReaderScene>{
     // 不延迟的话，安卓获取到的topSafeHeight是错的。
     topSafeHeight = Screen.topSafeHeight;
 
-    await Future.delayed(Duration(milliseconds: 2000), () {
-      pageState = PageState.Content;
-    });
+    pageState = PageState.Content;
 
-    List<dynamic> chaptersResponse = await Request.get(action: 'catalog');
-    chaptersResponse.forEach((data) {
-      chapters.add(Chapter.fromJson(data));
-    });
+    chapters = widget.menuList.mixToc.chapters;
 
-    await resetContent(this.widget.articleId, PageJumpType.stay);
+    await resetContent(chapters[0].link, PageJumpType.stay);
   }
 
-  resetContent(int articleId, PageJumpType jumpType) async {
+  resetContent(String articleId, PageJumpType jumpType) async {
     currentArticle = await fetchArticle(articleId);
-    if (currentArticle.preArticleId > 0) {
-      preArticle = await fetchArticle(currentArticle.preArticleId);
+    if (selectChapter > 0) {
+      preArticle = await fetchArticle(chapters[selectChapter-1].link);
     } else {
       preArticle = null;
     }
-    if (currentArticle.nextArticleId > 0) {
-      nextArticle = await fetchArticle(currentArticle.nextArticleId);
+    if (selectChapter < (chapters.length-1)) {
+      nextArticle = await fetchArticle(chapters[selectChapter+1].link);
     } else {
       nextArticle = null;
     }
     if (jumpType == PageJumpType.firstPage) {
-      pageIndex = 0;
+      selectChapter = 0;
     } else if (jumpType == PageJumpType.lastPage) {
-      pageIndex = currentArticle.pageCount - 1;
+      selectChapter = chapters.length - 1;
     }
     if (jumpType != PageJumpType.stay) {
       pageController.jumpToPage((preArticle != null ? preArticle.pageCount : 0) + pageIndex);
@@ -117,7 +117,7 @@ class ReaderSceneState extends State<ReaderScene>{
       nextArticle = null;
       pageIndex = 0;
       pageController.jumpToPage(preArticle.pageCount);
-      fetchNextArticle(currentArticle.nextArticleId);
+      fetchNextArticle(chapters[selectChapter].link);
       setState(() {});
     }
     if (preArticle != null && page <= preArticle.pageCount - 1) {
@@ -128,12 +128,12 @@ class ReaderSceneState extends State<ReaderScene>{
       preArticle = null;
       pageIndex = currentArticle.pageCount - 1;
       pageController.jumpToPage(currentArticle.pageCount - 1);
-      fetchPreviousArticle(currentArticle.preArticleId);
+      fetchPreviousArticle(chapters[selectChapter].link);
       setState(() {});
     }
   }
 
-  fetchPreviousArticle(int articleId) async {
+  fetchPreviousArticle(String articleId) async {
     if (preArticle != null || isLoading || articleId == 0) {
       return;
     }
@@ -144,7 +144,7 @@ class ReaderSceneState extends State<ReaderScene>{
     setState(() {});
   }
 
-  fetchNextArticle(int articleId) async {
+  fetchNextArticle(String articleId) async {
     if (nextArticle != null || isLoading || articleId == 0) {
       return;
     }
@@ -154,11 +154,11 @@ class ReaderSceneState extends State<ReaderScene>{
     setState(() {});
   }
 
-  Future<Article> fetchArticle(int articleId) async {
-    var article = await ArticleProvider.fetchArticle(articleId);
+  Future<NovelChapterInfo> fetchArticle(String articleId) async {
+    NovelChapterInfo article = await NovelModel.getBookDetailInfo(articleId);
     var contentHeight = Screen.height - topSafeHeight - ReaderUtils.topOffset - Screen.bottomSafeHeight - ReaderUtils.bottomOffset - 20;
     var contentWidth = Screen.width - 15 - 10;
-    article.pageOffsets = ReaderPageAgent.getPageOffsets(article.content, contentHeight, contentWidth, ReaderConfig.instance.fontSize);
+    article.pageOffsets = ReaderPageAgent.getPageOffsets(article.body, contentHeight, contentWidth, ReaderConfig.instance.fontSize);
 
     return article;
   }
@@ -187,7 +187,7 @@ class ReaderSceneState extends State<ReaderScene>{
   }
 
   previousPage() {
-    if (pageIndex == 0 && currentArticle.preArticleId == 0) {
+    if (pageIndex == 0 ) {
       Toast.show('已经是第一页了');
       return;
     }
@@ -195,7 +195,7 @@ class ReaderSceneState extends State<ReaderScene>{
   }
 
   nextPage() {
-    if (pageIndex >= currentArticle.pageCount - 1 && currentArticle.nextArticleId == 0) {
+    if (pageIndex >= currentArticle.pageCount - 1 ) {
       Toast.show('已经是最后一页了');
       return;
     }
@@ -246,16 +246,16 @@ class ReaderSceneState extends State<ReaderScene>{
     }
     return ReaderMenu(
       chapters: chapters,
-      articleIndex: currentArticle.index,
+      articleIndex: 0,
       onTap: hideMenu,
       onPreviousArticle: () {
-        resetContent(currentArticle.preArticleId, PageJumpType.firstPage);
+        resetContent("", PageJumpType.firstPage);
       },
       onNextArticle: () {
-        resetContent(currentArticle.nextArticleId, PageJumpType.firstPage);
+        resetContent("", PageJumpType.firstPage);
       },
-      onToggleChapter: (Chapter chapter) {
-        resetContent(chapter.id, PageJumpType.firstPage);
+      onToggleChapter: (Novelmenu chapter) {
+        resetContent(chapter.link, PageJumpType.firstPage);
       },
     );
   }

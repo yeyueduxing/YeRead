@@ -10,6 +10,7 @@ import 'package:tianyue/me/web_scene.dart';
 import 'package:tianyue/module/comic/bean/comic_detail_info_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_book_statistics_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_detail_entity.dart';
+import 'package:tianyue/module/novel/bean/novel_menu_list_entity.dart';
 import 'package:tianyue/module/novel/page/novel_book_list_scene.dart';
 import 'package:tianyue/module/novel/page/novel_detail_scene.dart';
 import 'package:tianyue/module/novel/page/novel_post_scene.dart';
@@ -101,7 +102,7 @@ class AppNavigator {
     AppNavigator.push(context, WebScene(url: url, title: title));
   }
 
-  static pushReader(BuildContext context, int articleId) {
-    AppNavigator.push(context, ReaderScene(articleId: articleId));
+  static pushReader(BuildContext context, NovelMenuListEntity articleId) {
+    AppNavigator.push(context, ReaderScene(menuList: articleId));
   }
 }

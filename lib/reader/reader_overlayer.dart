@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tianyue/module/novel/bean/novel_chapter_detail_entity.dart';
 
 import 'package:tianyue/public.dart';
 import 'battery_view.dart';
 
 class ReaderOverlayer extends StatelessWidget {
-  final Article article;
+  final NovelChapterInfo article;
   final int page;
   final double topSafeHeight;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tianyue/module/novel/bean/novel_chapter_detail_entity.dart';
 
 import 'package:tianyue/public.dart';
 import 'reader_overlayer.dart';
@@ -6,7 +7,7 @@ import 'reader_utils.dart';
 import 'reader_config.dart';
 
 class ReaderView extends StatelessWidget {
-  final Article article;
+  final NovelChapterInfo article;
   final int page;
   final double topSafeHeight;
 
@@ -23,7 +24,8 @@ class ReaderView extends StatelessWidget {
     );
   }
 
-  buildContent(Article article, int page) {
+
+  buildContent(NovelChapterInfo article, int page) {
     var content = article.stringAtPageIndex(page);
 
     if (content.startsWith('\n')) {

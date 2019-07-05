@@ -42,8 +42,10 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
   //书单类型，最新，最热，收藏最多
   int _selectDuration = 0;
   bool isShowSelect = false;
+
   //一级的分类
   String _selectTag;
+
   //二级分类
   String _secondTag;
 
@@ -65,7 +67,7 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
         sort = "all&sort=collectorCount";
       }
       String tag = _selectTag;
-      if(_secondTag!=null){
+      if (_secondTag != null) {
         tag = _secondTag;
       }
       novelBookLists =
@@ -119,9 +121,9 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
     if (isShowSelect != true) {
       return Container();
     }
-    List<Widget> childList = [getTagLabel("全部",false)];
+    List<Widget> childList = [getTagLabel("全部", false)];
     widget.novelBookTags.forEach((types) {
-      childList.add(getTagLabel(types.major,false));
+      childList.add(getTagLabel(types.major, false));
     });
     List<Widget> selectList = [];
     selectList.add(Text(
@@ -132,16 +134,16 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
         spacing: 6.0, // gap between adjacent chips
         runSpacing: 0.0, // gap between lines
         children: childList));
-    if(_selectTag!=null){
-      widget.novelBookTags.forEach((types){
-        if(_selectTag==types.major && types.mins.length>0){
+    if (_selectTag != null) {
+      widget.novelBookTags.forEach((types) {
+        if (_selectTag == types.major && types.mins.length > 0) {
           selectList.add(Text(
             "子分类",
             style: new TextStyle(fontSize: 18, color: TYColor.darkGray),
           ));
-          List<Widget> secondChildList = [getTagLabel("全部",true)];
+          List<Widget> secondChildList = [getTagLabel("全部", true)];
           types.mins.forEach((min) {
-            secondChildList.add(getTagLabel(min,true));
+            secondChildList.add(getTagLabel(min, true));
           });
           selectList.add(Wrap(
               spacing: 6.0, // gap between adjacent chips
@@ -149,14 +151,13 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
               children: secondChildList));
         }
       });
-
     }
     selectList.add(RaisedButton(
-      // 文本内容
+        // 文本内容
         color: Colors.red,
         child: Text("确认", semanticsLabel: 'FLAT BUTTON 1'),
         shape: RoundedRectangleBorder(
-          borderRadius:new BorderRadius.circular((20.0)),
+          borderRadius: new BorderRadius.circular((20.0)),
         ),
         onPressed: () {
           setState(() {
@@ -164,32 +165,33 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
             fetchData();
           });
         }));
-    return Container(
-      color: TYColor.white,
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 80),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: selectList,
+    return SingleChildScrollView(
+      child: Container(
+        color: TYColor.white,
+        padding: EdgeInsets.fromLTRB(20, 10, 20, 80),
+        child: ListBody(
+          children: selectList,
+        ),
       ),
     );
   }
 
-  Widget getTagLabel(String title,bool isSecond) {
+  Widget getTagLabel(String title, bool isSecond) {
     bool isSelect = false;
-    if(isSecond==true){
-      if(_secondTag==null || _secondTag==""){
-        if(title=="全部"){
+    if (isSecond == true) {
+      if (_secondTag == null || _secondTag == "") {
+        if (title == "全部") {
           isSelect = true;
         }
-      }else if(_secondTag==title){
+      } else if (_secondTag == title) {
         isSelect = true;
       }
-    }else{
-      if(_selectTag==null || _selectTag==""){
-        if(title=="全部"){
+    } else {
+      if (_selectTag == null || _selectTag == "") {
+        if (title == "全部") {
           isSelect = true;
         }
-      }else if(_selectTag==title){
+      } else if (_selectTag == title) {
         isSelect = true;
       }
     }
@@ -199,14 +201,14 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
         color: isSelect ? Colors.amber : TYColor.paper,
         child: Text(title, semanticsLabel: 'FLAT BUTTON 1'),
         shape: RoundedRectangleBorder(
-            borderRadius:new BorderRadius.circular((20.0)),
+          borderRadius: new BorderRadius.circular((20.0)),
         ),
         onPressed: () {
           setState(() {
-            if(isSecond==true){
+            if (isSecond == true) {
               _secondTag = title;
-            }else{
-              _secondTag ="";
+            } else {
+              _secondTag = "";
               _selectTag = title;
             }
           });
@@ -242,7 +244,7 @@ class NovelBookListPageState extends State<NovelBookListPageScene>
       body: Stack(
         children: <Widget>[
           Container(
-              margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 60, 0, 0),
               color: TYColor.white,
               child: Column(
                 children: <Widget>[

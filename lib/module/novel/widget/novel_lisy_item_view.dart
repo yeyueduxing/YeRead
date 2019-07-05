@@ -75,7 +75,7 @@ class NovelListItemView extends StatelessWidget {
                       Expanded(
                         child: Container(),
                       ),
-                      Text(comicItem.minorCate),
+                      Text(comicItem.minorCate==null?"无":comicItem.majorCate),
                     ],
                   )
                 ],

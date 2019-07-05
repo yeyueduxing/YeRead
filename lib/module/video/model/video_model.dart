@@ -399,6 +399,8 @@ class VideoModel {
         switch (i) {
           case 2:
             title = match.replaceAll(" ", "");
+            title = title.replaceAll("\s", "");
+            title = title.replaceAll("\S", "");
             break;
           case 1:
             params = match.replaceAll("-1", "");
@@ -412,7 +414,7 @@ class VideoModel {
   }
 
   static List<VideoInfoEntity> getVideoCataLogItems(String responseBody) {
-    RegExp regAll = new RegExp(r'class="cell blockdiff[\s\S]*?href="/detail/(.*?)"[\s\S]*?src="(.*?)"[\s\S]*?class="newname">(.*?)<[\s\S]*?cell_imform_name">(.*?)<[\s\S]*?cell_imform_desc">([\s\S]*?)</div>');
+    RegExp regAll = new RegExp(r'class="cell blockdiff[\s\S]*?href="/detail/(.*?)"[\s\S]*?src="(.*?)"[\s\S]*?alt="(.*?)"[\s\S]*?class="newname">(.*?)<[\s\S]*?cell_imform_name">(.*?)<[\s\S]*?cell_imform_desc">([\s\S]*?)</div>');
     Iterable<Match> matchesAll = regAll.allMatches(responseBody);
     String infoMatch = "";
     print(matchesAll);
@@ -422,13 +424,14 @@ class VideoModel {
       //由于group(0)保存了匹配信息，因此字符串的总长度为：分组数+1
       String sid = m.group(1);
       String name = m.group(3);
-      String desc = m.group(5);
+      String desc = m.group(6);
       String cover = "http:"+m.group(2);
       String itemBody = m.group(0);
       VideoInfoEntity info = getVideoCataLogItemsInfo(itemBody);
       info.describe = desc;
       info.sid = sid;
       info.cover = cover;
+      info.title = name;
       list.add(info);
     }
     return list;

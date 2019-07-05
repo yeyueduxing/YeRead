@@ -16,6 +16,7 @@ import 'package:tianyue/module/novel/bean/novel_booklist.dart';
 import 'package:tianyue/module/novel/bean/novel_booklist_detail_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_booklist_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_cate_info_entity.dart';
+import 'package:tianyue/module/novel/bean/novel_chapter_detail_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_comment_list_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_detail_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_menu_list_entity.dart';
@@ -23,6 +24,7 @@ import 'package:tianyue/module/novel/bean/novel_post.dart';
 import 'package:tianyue/module/novel/bean/novel_post_list_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_rank_entity.dart';
 import 'package:tianyue/module/novel/bean/novel_rank_response_entity.dart';
+import 'package:tianyue/module/novel/bean/novel_search_hotword_entity.dart';
 
 /**
  *
@@ -161,6 +163,35 @@ class NovelModel{
     return enity;
   }
 
+  /**
+   *获取分类详情
+   */
+  static Future<List<NovelBook>> getBookSearchList(String query,int start,int limit) async {
+    String url = "http://api.zhuishushenqi.com/book/fuzzy-search?query=${query}&start=${start}&limit=${limit}";
+    print(url);
+    List<NovelBook> list = [];
+    var responseJson = await Request.getByHttpClient(url);
+    NovelCateInfoEntity enity = NovelCateInfoEntity.fromJson(responseJson);
+    if(enity!=null){
+      list = enity.books;
+    }
+    return list;
+  }
+  /**
+   *获取搜索推荐
+   */
+  static Future<List<NovelSearchHotwordSearchhotword>> getBookSearchHotwords() async {
+    String url = "http://api.zhuishushenqi.com/book/search-hotwords";
+    print(url);
+    List<NovelSearchHotwordSearchhotword> list = [];
+    var responseJson = await Request.getByHttpClient(url);
+    NovelSearchHotwordEntity enity = NovelSearchHotwordEntity.fromJson(responseJson);
+    if(enity!=null){
+      list = enity.searchHotWords;
+    }
+    return list;
+  }
+
   static Future<List<NovelBook>> getBookRecommend(String novelId) async {
     String url = "http://api.zhuishushenqi.com/book/${novelId}/recommend";
     print(url);
@@ -193,5 +224,19 @@ class NovelModel{
     var responseJson = json.decode(response.data);
     NovelBooklistDetailEntity enity = NovelBooklistDetailEntity.fromJson(responseJson);
     return enity;
+  }
+
+
+  /**
+   * 获取章节详情
+   */
+  static Future<NovelChapterInfo> getBookDetailInfo(String link) async {
+    String url = "http://chapter2.zhuishushenqi.com/chapter/"+Uri.encodeComponent(link);
+    print(url);
+    var responseJson = await Request.getByHttpClient(url);
+    NovelChapterDetail enity = NovelChapterDetail.fromJson(responseJson);
+    NovelChapterInfo info = new NovelChapterInfo();
+    info = enity.chapter;
+    return info;
   }
 }

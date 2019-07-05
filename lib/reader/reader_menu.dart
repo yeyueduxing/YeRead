@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:tianyue/module/novel/bean/novel_menu.dart';
 import 'dart:async';
 
 import 'package:tianyue/public.dart';
 
 class ReaderMenu extends StatefulWidget {
-  final List<Chapter> chapters;
+  final List<Novelmenu> chapters;
   final int articleIndex;
 
   final VoidCallback onTap;
   final VoidCallback onPreviousArticle;
   final VoidCallback onNextArticle;
-  final void Function(Chapter chapter) onToggleChapter;
+  final void Function(Novelmenu chapter) onToggleChapter;
 
   ReaderMenu({this.chapters, this.articleIndex, this.onTap, this.onPreviousArticle, this.onNextArticle, this.onToggleChapter});
 
@@ -103,8 +104,8 @@ class _ReaderMenuState extends State<ReaderMenu> with SingleTickerProviderStateM
     if (!isTipVisible) {
       return Container();
     }
-    Chapter chapter = this.widget.chapters[currentArticleIndex()];
-    double percentage = chapter.index / (this.widget.chapters.length - 1) * 100;
+    Novelmenu chapter = this.widget.chapters[currentArticleIndex()];
+    double percentage = widget.articleIndex / (this.widget.chapters.length - 1) * 100;
     return Container(
       decoration: BoxDecoration(color: Color(0xff00C88D), borderRadius: BorderRadius.circular(5)),
       margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
@@ -163,7 +164,7 @@ class _ReaderMenuState extends State<ReaderMenu> with SingleTickerProviderStateM
                 });
               },
               onChangeEnd: (double value) {
-                Chapter chapter = this.widget.chapters[currentArticleIndex()];
+                Novelmenu chapter = this.widget.chapters[currentArticleIndex()];
                 this.widget.onToggleChapter(chapter);
               },
               activeColor: TYColor.primary,

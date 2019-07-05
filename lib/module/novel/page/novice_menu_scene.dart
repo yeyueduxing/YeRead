@@ -89,7 +89,8 @@ class NovelMenuState extends State<NovelMenuScene>
   Widget buildChapterWidget(BuildContext context, Novelmenu chapterName,int index) {
     return GestureDetector(
         onTap: () {
-          //AppNavigator.pushComicReader(context,  widget.comicDetail,index);
+          print(widget.novelId+"-"+chapterName.toJson().toString());
+          AppNavigator.pushReader(context, novelMenuList);
         },
         child: Container(
           margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
