@@ -7,6 +7,7 @@ import 'package:redux/redux.dart';
 import 'package:tianyue/common/dao/comic_dao.dart';
 import 'package:tianyue/common/dao/video_dao.dart';
 import 'package:tianyue/common/event/collect_event.dart';
+import 'package:tianyue/common/event/event_bus.dart';
 import 'package:tianyue/common/widget/base_app_bar_widget.dart';
 import 'package:tianyue/common/widget/base_list_widget.dart';
 import 'package:tianyue/module/comic/bean/comic_recommend_entity.dart';
@@ -47,10 +48,15 @@ class VideoCollectState extends State<VideoCollectScene>
     super.initState();
 
     fetchData();
-    EventBus eventBus = new EventBus();
-    eventBus.on<CollectEvent>().listen((onData) {
-      fetchData();
-    });
+    if(ApplicationEvent.event!=null){
+      ApplicationEvent.event.on<CollectEvent>().listen((onData) {
+        if(mounted==true){
+          print("接收到通知3");
+          fetchData();
+        }
+      });
+    }
+
   }
 
   @override

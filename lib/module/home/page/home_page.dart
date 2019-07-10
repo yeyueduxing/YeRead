@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tianyue/app/ty_color.dart';
+import 'package:tianyue/common/event/event_bus.dart';
 import 'package:tianyue/common/search/search_key_bean.dart';
 import 'package:tianyue/common/search/search_page.dart';
 import 'package:tianyue/common/widget/gsy_tabbar_widget.dart';
@@ -46,7 +48,10 @@ class HomePageState extends State<HomePage> {
   int selectIndex = 1;
 
   @override
-  void initState() {}
+  void initState() {
+    final eventBus = new EventBus();
+    ApplicationEvent.event = eventBus;
+  }
 
   /// 不退出
   Future<bool> _dialogExitApp(BuildContext context) async {

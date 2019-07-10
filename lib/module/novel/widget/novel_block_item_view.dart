@@ -23,40 +23,32 @@ class NovelBlockItemView extends StatelessWidget {
       child: Container(
         color: bgColor,
         width: width,
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             NovelCoverImage(
                 "http://statics.zhuishushenqi.com" + comicItem.cover,
                 width: width, height: width / 0.75),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    comicItem.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.none),
-                    maxLines: 1,
-                  ),
-                  comicItem.shortIntro == null
-                      ? SizedBox(height: 1)
-                      : Text(
-                    comicItem.shortIntro,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: TYColor.gray,
-                        decoration: TextDecoration.none),
-                    maxLines: 2,
-                  ),
-                ],
-              ),
+            Text(
+              comicItem.title,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none),
+              maxLines: 1,
             ),
-            SizedBox(width: 4),
+            comicItem.shortIntro == null
+                ? SizedBox(height: 1)
+                : Text(
+              comicItem.shortIntro,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 12,
+                  color: TYColor.gray,
+                  decoration: TextDecoration.none),
+              maxLines: 2,
+            ),
 
           ],
         ),
